@@ -1,7 +1,3 @@
-# =============================================================================
-# envs/aws/outputs.tf
-# =============================================================================
-
 output "alb_dns_name" {
   description = "Public DNS of the Application Load Balancer"
   value       = module.compute.alb_dns_name

@@ -1,7 +1,3 @@
-# =============================================================================
-# envs/aws/variables.tf
-# =============================================================================
-
 variable "project_name" {
   type    = string
   default = "cubestore"
@@ -14,7 +10,7 @@ variable "environment" {
 
 variable "aws_region" {
   type    = string
-  default = "us-east-1"
+  default = "eu-north-1"
 }
 
 variable "vpc_cidr" {
@@ -63,7 +59,7 @@ variable "redis_port" {
 }
 
 variable "backend_image" {
-  description = "Full ECR image URL for the backend, e.g. 123456789.dkr.ecr.us-east-1.amazonaws.com/cubestore/backend:v1.0.0"
+  description = "Full ECR image URL for the backend, e.g. 123456789.dkr.ecr.eu-north-1.amazonaws.com/cubestore/backend:v1.0.0"
   type        = string
 }
 

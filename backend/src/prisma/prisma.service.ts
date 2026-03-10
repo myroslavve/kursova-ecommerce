@@ -4,15 +4,6 @@ import { Pool } from 'pg';
 import { PrismaClient, Prisma } from '../generated/prisma/client';
 export type { Product, Order } from '../generated/prisma/client';
 
-/**
- * PrismaService — офіційний NestJS + Prisma 7 патерн (docs.nestjs.com/recipes/prisma).
- *
- * extends PrismaClient — рекомендований спосіб:
- *   • Всі методи (product, order, $connect тощо) доступні напряму.
- *   • Driver adapter (PrismaPg) передається через super().
- *
- * У продакшені DATABASE_URL може вказувати на PgBouncer (connection pooling).
- */
 @Injectable()
 export class PrismaService
   extends PrismaClient
@@ -36,6 +27,5 @@ export class PrismaService
     await this.$disconnect();
   }
 
-  // Re-export namespace so callers can use Prisma.validator(), etc.
   readonly Prisma = Prisma;
 }

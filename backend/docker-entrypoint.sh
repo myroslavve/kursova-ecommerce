@@ -1,11 +1,4 @@
 #!/bin/sh
-# =============================================================================
-# docker-entrypoint.sh — backend container startup
-#
-# 1. Waits until PostgreSQL is accepting connections.
-# 2. Applies the SQL migration idempotently (IF NOT EXISTS guards in the SQL).
-# 3. Starts the NestJS server.
-# =============================================================================
 set -e
 
 DB_HOST="${DB_HOST:-postgres}"

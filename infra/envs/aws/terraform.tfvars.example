@@ -5,7 +5,7 @@
 
 project_name = "cubestore"
 environment  = "prod"
-aws_region   = "us-east-1"
+aws_region   = "eu-north-1"
 
 db_username = "cubestore"
 db_password = "CHANGE_ME_strong_password"
@@ -14,5 +14,5 @@ db_name     = "cubestore"
 db_instance_class = "db.t3.micro"   # use db.t3.small or larger for prod load
 
 # Set after `terraform apply` on the registry env (or use data source)
-backend_image  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/cubestore/backend:latest"
-frontend_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/cubestore/frontend:latest"
+backend_image  = "123456789012.dkr.ecr.eu-north-1.amazonaws.com/cubestore/backend:latest"
+frontend_image = "123456789012.dkr.ecr.eu-north-1.amazonaws.com/cubestore/frontend:latest"

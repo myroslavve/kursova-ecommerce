@@ -1,10 +1,3 @@
-# =============================================================================
-# modules/registry — Container image registries
-#
-# AWS → ECR repositories (backend + frontend)
-# GCP → Artifact Registry repositories (backend + frontend)
-# =============================================================================
-
 variable "cloud"        { type = string }
 variable "project_name" { type = string; default = "cubestore" }
 variable "environment"  { type = string; default = "prod" }
@@ -17,7 +10,6 @@ locals {
   services = ["backend", "frontend"]
 }
 
-# ── AWS ECR ───────────────────────────────────────────────────────────────────
 resource "aws_ecr_repository" "repos" {
   for_each = local.reg_aws ? toset(local.services) : toset([])
 
@@ -31,7 +23,6 @@ resource "aws_ecr_repository" "repos" {
   tags = { Environment = var.environment }
 }
 
-# Lifecycle: keep last 10 tagged images, expire untagged after 1 day
 resource "aws_ecr_lifecycle_policy" "repos" {
   for_each   = aws_ecr_repository.repos
   repository = each.value.name
@@ -64,7 +55,6 @@ resource "aws_ecr_lifecycle_policy" "repos" {
   })
 }
 
-# ── GCP Artifact Registry ─────────────────────────────────────────────────────
 resource "google_artifact_registry_repository" "repos" {
   for_each = local.reg_gcp ? toset(local.services) : toset([])
 
@@ -77,7 +67,6 @@ resource "google_artifact_registry_repository" "repos" {
   labels = { environment = var.environment }
 }
 
-# ── Outputs ───────────────────────────────────────────────────────────────────
 output "ecr_urls" {
   description = "Map of service → ECR repository URL (AWS only)"
   value       = { for k, v in aws_ecr_repository.repos : k => v.repository_url }

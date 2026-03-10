@@ -1,8 +1,3 @@
-# =============================================================================
-# modules/network — outputs
-# All outputs use try() so callers on the other cloud get null instead of error
-# =============================================================================
-
 output "vpc_id" {
   description = "AWS VPC ID (null on GCP)"
   value       = try(aws_vpc.main[0].id, null)

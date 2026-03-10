@@ -1,14 +1,9 @@
-# =============================================================================
-# modules/network — AWS resources
-# Created only when var.cloud == "aws"
-# =============================================================================
-
 locals {
   aws = var.cloud == "aws"
   name = "${var.project_name}-${var.environment}"
 }
 
-# ── VPC ───────────────────────────────────────────────────────────────────────
+
 resource "aws_vpc" "main" {
   count = local.aws ? 1 : 0
 
@@ -19,14 +14,12 @@ resource "aws_vpc" "main" {
   tags = { Name = "${local.name}-vpc" }
 }
 
-# ── Internet Gateway ──────────────────────────────────────────────────────────
 resource "aws_internet_gateway" "main" {
   count  = local.aws ? 1 : 0
   vpc_id = aws_vpc.main[0].id
   tags   = { Name = "${local.name}-igw" }
 }
 
-# ── Public subnets ────────────────────────────────────────────────────────────
 data "aws_availability_zones" "available" {
   count = local.aws ? 1 : 0
   state = "available"
@@ -43,7 +36,6 @@ resource "aws_subnet" "public" {
   tags = { Name = "${local.name}-public-${count.index + 1}" }
 }
 
-# ── NAT Gateway (one, in first public subnet) ─────────────────────────────────
 resource "aws_eip" "nat" {
   count  = local.aws ? 1 : 0
   domain = "vpc"
@@ -58,7 +50,6 @@ resource "aws_nat_gateway" "main" {
   depends_on    = [aws_internet_gateway.main]
 }
 
-# ── Private subnets ───────────────────────────────────────────────────────────
 resource "aws_subnet" "private" {
   count = local.aws ? length(var.private_subnet_cidrs) : 0
 
@@ -69,7 +60,6 @@ resource "aws_subnet" "private" {
   tags = { Name = "${local.name}-private-${count.index + 1}" }
 }
 
-# ── Route tables ──────────────────────────────────────────────────────────────
 resource "aws_route_table" "public" {
   count  = local.aws ? 1 : 0
   vpc_id = aws_vpc.main[0].id
@@ -104,7 +94,6 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private[0].id
 }
 
-# ── Security Group: ECS tasks (backend + frontend) ────────────────────────────
 resource "aws_security_group" "ecs_tasks" {
   count  = local.aws ? 1 : 0
   name   = "${local.name}-ecs-tasks-sg"
@@ -126,7 +115,6 @@ resource "aws_security_group" "ecs_tasks" {
   tags = { Name = "${local.name}-ecs-tasks-sg" }
 }
 
-# ── Security Group: RDS ───────────────────────────────────────────────────────
 resource "aws_security_group" "rds" {
   count  = local.aws ? 1 : 0
   name   = "${local.name}-rds-sg"

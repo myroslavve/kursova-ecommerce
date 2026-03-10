@@ -1,8 +1,3 @@
-# =============================================================================
-# modules/network — GCP resources
-# Created only when var.cloud == "gcp"
-# =============================================================================
-
 locals {
   gcp = var.cloud == "gcp"
 }
@@ -18,7 +13,7 @@ resource "google_vpc_access_connector" "connector" {
   project       = var.gcp_project
   region        = var.gcp_region
   ip_cidr_range = var.connector_cidr
-  network       = "default" # uses the default VPC; replace with a custom VPC if needed
+  network       = "default"
 
   min_throughput = 200  # Mbps
   max_throughput = 1000 # Mbps

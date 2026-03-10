@@ -1,12 +1,3 @@
-# =============================================================================
-# modules/network — Unified network abstraction
-#
-# AWS → VPC + public/private subnets + NAT Gateway + Security Groups
-# GCP → Serverless VPC Access Connector (for Cloud Run ↔ Cloud SQL)
-#
-# The `cloud` variable switches which provider resources are created.
-# =============================================================================
-
 variable "cloud" {
   description = "Target cloud: 'aws' or 'gcp'"
   type        = string

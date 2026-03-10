@@ -13,16 +13,6 @@ export class CatalogService {
     private readonly redis: RedisService,
   ) {}
 
-  /**
-   * GET /api/products
-   *
-   * Cache-aside strategy:
-   *  1. Try Redis first.
-   *  2. On miss → query PostgreSQL, write result to Redis, return data.
-   *
-   * In a production setup the cache would be invalidated on product updates
-   * (via an event or a short TTL). For this project a 10-minute TTL is used.
-   */
   async findAll(): Promise<Product[]> {
     const cached = await this.redis.getJson<Product[]>(PRODUCTS_CACHE_KEY);
     if (cached) {
@@ -37,12 +27,6 @@ export class CatalogService {
     return products;
   }
 
-  /**
-   * GET /api/products/:id
-   *
-   * Individual product cache — used by Nuxt SSR to render product pages
-   * without hitting PostgreSQL on every request.
-   */
   async findOne(id: string): Promise<Product> {
     const cacheKey = `catalog:product:${id}`;
     const cached = await this.redis.getJson<Product>(cacheKey);

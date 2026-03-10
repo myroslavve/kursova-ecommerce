@@ -1,7 +1,3 @@
-# =============================================================================
-# envs/gcp/outputs.tf
-# =============================================================================
-
 output "backend_url" {
   description = "Cloud Run backend service URL"
   value       = module.compute.backend_cloud_run_url

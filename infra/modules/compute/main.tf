@@ -1,12 +1,3 @@
-# =============================================================================
-# modules/compute — Container runtime
-#
-# AWS → ECS Cluster + Fargate task definitions + ALB
-# GCP → Cloud Run services (backend + frontend)
-#
-# Both accept the same image URLs + env var maps and expose an HTTPS endpoint.
-# =============================================================================
-
 variable "cloud"            { type = string }
 variable "project_name"     { type = string; default = "cubestore" }
 variable "environment"      { type = string; default = "prod" }
@@ -33,7 +24,7 @@ locals {
   name    = "${var.project_name}-${var.environment}"
 }
 
-# ── AWS: ECS Cluster ───────────────────────────────────────────────────────────
+
 resource "aws_ecs_cluster" "main" {
   count = local.cmp_aws ? 1 : 0
   name  = "${local.name}-cluster"
@@ -44,7 +35,6 @@ resource "aws_ecs_cluster" "main" {
   }
 }
 
-# IAM role for ECS task execution (pull images, write logs)
 data "aws_iam_policy_document" "ecs_assume" {
   count = local.cmp_aws ? 1 : 0
   statement {
@@ -305,7 +295,6 @@ resource "google_cloud_run_v2_service" "frontend" {
   }
 }
 
-# Allow unauthenticated invocations (public store)
 resource "google_cloud_run_v2_service_iam_member" "backend_public" {
   count    = local.cmp_gcp ? 1 : 0
   project  = var.gcp_project

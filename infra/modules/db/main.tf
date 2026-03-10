@@ -1,15 +1,3 @@
-# =============================================================================
-# modules/db — Managed PostgreSQL
-#
-# AWS → RDS PostgreSQL 16 (Multi-AZ in prod, single-AZ in dev)
-# GCP → Cloud SQL PostgreSQL 16
-#
-# Replication strategy (Active-Standby):
-#   Primary lives in AWS. GCP Cloud SQL is configured as a Read Replica via
-#   external replication (logical replication from AWS RDS).
-#   In a future Active-Active setup both instances would be writable.
-# =============================================================================
-
 variable "cloud"               { type = string }
 variable "project_name"        { type = string; default = "cubestore" }
 variable "environment"         { type = string; default = "prod" }
@@ -60,7 +48,6 @@ resource "aws_db_instance" "postgres" {
   db_subnet_group_name   = aws_db_subnet_group.main[0].name
   vpc_security_group_ids = [var.rds_sg_id]
 
-  # Enable logical replication so GCP replica can subscribe
   parameter_group_name = aws_db_parameter_group.postgres[0].name
 
   multi_az                = var.multi_az

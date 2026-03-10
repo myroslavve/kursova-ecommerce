@@ -1,10 +1,3 @@
-# =============================================================================
-# envs/gcp/main.tf — GCP environment root module
-#
-# Wires up all shared modules for the GCP (secondary / failover) cloud.
-# Remote state is stored in GCS (configured via backend "gcs" block below).
-# =============================================================================
-
 terraform {
   required_version = ">= 1.10.0"
 
@@ -15,11 +8,7 @@ terraform {
     }
   }
 
-  # ── Remote state (GCS) ────────────────────────────────────────────────────
-  # Create the bucket first:
-  #   gcloud storage buckets create gs://cubestore-tf-state-gcp \
-  #     --location=europe-west3 --uniform-bucket-level-access
-  # Then run: terraform init
+
   backend "gcs" {
     bucket = "cubestore-tf-state-gcp"   # ← replace with your GCS bucket name
     prefix = "gcp/terraform.tfstate"
@@ -29,9 +18,6 @@ terraform {
 provider "google" {
   project = var.gcp_project
   region  = var.gcp_region
-
-  # Credentials come from GOOGLE_APPLICATION_CREDENTIALS env var
-  # or from `gcloud auth application-default login`
 }
 
 # ── Network (VPC Access Connector) ────────────────────────────────────────────
@@ -87,7 +73,6 @@ module "compute" {
   frontend_image = var.frontend_image
 
   backend_env = {
-    # Cloud Run connects to Cloud SQL via private IP through the VPC Connector
     DATABASE_URL = "postgresql://${var.db_username}:${var.db_password}@${module.db.cloudsql_private_ip}:5432/${var.db_name}"
     REDIS_HOST   = var.memorystore_host
     REDIS_PORT   = "6379"

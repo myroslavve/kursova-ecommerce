@@ -1,10 +1,3 @@
-# =============================================================================
-# envs/aws/main.tf — AWS environment root module
-#
-# Wires up all shared modules for the AWS (primary) cloud.
-# Remote state is stored in S3 (configured in backend.tf).
-# =============================================================================
-
 terraform {
   required_version = ">= 1.10.0"
 
@@ -15,14 +8,11 @@ terraform {
     }
   }
 
-  # ── Remote state (S3 + DynamoDB locking) ──────────────────────────────────
-  # Run `terraform init` after creating the bucket and DynamoDB table manually
-  # (bootstrap step described in README).
-  # The bucket name must be globally unique — set it in backend.hcl or inline.
+
   backend "s3" {
     bucket         = "cubestore-tf-state"     # ← replace with your bucket name
     key            = "aws/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "eu-north-1"
     encrypt        = true
     dynamodb_table = "cubestore-tf-locks"     # ← create this table, PK = LockID (String)
   }

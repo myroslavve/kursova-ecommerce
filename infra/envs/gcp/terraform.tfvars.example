@@ -1,0 +1,23 @@
+# =============================================================================
+# envs/gcp/terraform.tfvars.example
+# Copy to terraform.tfvars (gitignored) and fill in real values.
+# =============================================================================
+
+project_name = "cubestore"
+environment  = "prod"
+
+gcp_project = "cubestore-gcp"       # ← your GCP project ID
+gcp_region  = "europe-west3"
+
+db_username = "cubestore"
+db_password = "CHANGE_ME_strong_password"
+db_name     = "cubestore"
+
+cloudsql_tier = "db-f1-micro"       # use db-n1-standard-1 for prod load
+
+# Filled in after step 2.4 (Memorystore provisioning)
+memorystore_host = "10.x.x.x"
+
+# Set after `terraform apply` on the registry env
+backend_image  = "europe-west3-docker.pkg.dev/cubestore-gcp/cubestore-backend:latest"
+frontend_image = "europe-west3-docker.pkg.dev/cubestore-gcp/cubestore-frontend:latest"

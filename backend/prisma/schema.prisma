@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -17,7 +18,7 @@ datasource db {
 // Catalog domain
 // ---------------------------------------------------------------------------
 model Product {
-  id          String   @id @default(uuid())
+  id          String   @id @default(uuid()) @db.Uuid
   name        String
   description String?
   price       Float
@@ -34,7 +35,7 @@ model Product {
 // Orders domain
 // ---------------------------------------------------------------------------
 model Order {
-  id           String   @id @default(uuid())
+  id           String   @id @default(uuid()) @db.Uuid
   sessionId    String
   customerName String
   items        Json     // Список товарів з кошика, серіалізований як JSON

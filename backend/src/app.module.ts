@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
 import { CatalogModule } from './catalog/catalog.module';
@@ -8,6 +9,9 @@ import { OrdersModule } from './orders/orders.module';
 /**
  * Root application module — modular monolith.
  *
+ * ConfigModule.forRoot() MUST be first — it calls dotenv.config() synchronously,
+ * which populates process.env before any other provider constructor runs.
+ *
  * Domain breakdown:
  *  • PrismaModule  — global, provides PrismaService across all modules
  *  • RedisModule   — global, provides RedisService across all modules
@@ -16,6 +20,13 @@ import { OrdersModule } from './orders/orders.module';
  *  • OrdersModule  — POST /api/orders
  */
 @Module({
-  imports: [PrismaModule, RedisModule, CatalogModule, CartModule, OrdersModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    RedisModule,
+    CatalogModule,
+    CartModule,
+    OrdersModule,
+  ],
 })
 export class AppModule {}

@@ -58,16 +58,18 @@ CREATE OR REPLACE TRIGGER "products_updated_at"
 
 
 -- ---------------------------------------------------------------------------
--- 4. SEED — тестові товари (LEGO-кубики)
+-- 4. SEED — тестові товари (Кубики Рубіка)
 -- ---------------------------------------------------------------------------
 INSERT INTO "products" ("name", "description", "price", "stock", "category", "imageUrl")
 VALUES
-    ('LEGO Classic Brick Box',           'Набір класичних кубиків, 484 деталі',   29.99, 120, 'classic',      'https://images.lego.com/classic-brick-box.jpg'),
-    ('LEGO Technic Bugatti Chiron',       'Технік Бугатті, 3599 деталей, 1:8',   449.99,  15, 'technic',      'https://images.lego.com/technic-bugatti.jpg'),
-    ('LEGO Star Wars Millennium Falcon',  'Сокіл Тисячоліття, 7541 деталей',     849.99,   8, 'star-wars',    'https://images.lego.com/sw-falcon.jpg'),
-    ('LEGO City Police Station',          'Поліцейська дільниця, 743 деталі',     59.99,  60, 'city',         'https://images.lego.com/city-police.jpg'),
-    ('LEGO Creator 3-in-1 Dragon',        'Дракон/Риба/Фенікс, 314 деталей',     19.99, 200, 'creator',      'https://images.lego.com/creator-dragon.jpg'),
-    ('LEGO Architecture Eiffel Tower',    'Ейфелева вежа, 10001 деталь',         629.99,  20, 'architecture', 'https://images.lego.com/arch-eiffel.jpg')
+    ('Rubik''s Cube 3×3 Original',         'Класичний кубик Рубіка 3×3. Офіційний оригінал від Rubik''s Brand.',                        12.99, 250, '3x3',       NULL),
+    ('MoYu WeiLong WR M 3×3 Magnetic',    'Магнітний спідкубінг 3×3. Рекордний час збірки — рекомендований для змагань.',               29.99,  80, 'speedcube', NULL),
+    ('GAN 12 M Leap 3×3 Magnetic',        'Преміум магнітний кубик GAN із системою IPG v5. Ідеал для спортсменів.',                     49.99,  40, 'speedcube', NULL),
+    ('Rubik''s Cube 4×4 Revenge',          'Кубик Рубіка 4×4 — «Помста». Середній рівень складності, 304 рухомі деталі.',               19.99, 100, '4x4',       NULL),
+    ('MoYu AoSu WRM 5×5 Magnetic',        'Магнітний 5×5 для досвідчених кубістів. Плавне обертання, регульований магнетизм.',          39.99,  35, '5x5',       NULL),
+    ('QiYi Pyraminx M Magnetic',           'Пірамінкс — тетраедральний кутовий пазл. Відмінний вибір для початківців.',                   9.99, 150, 'pyraminx',  NULL),
+    ('MoYu AoHun Megaminx Magnetic',      'Мегамінкс 12-гранний пазл із магнітним позиціонуванням. 50 кутових деталей.',               24.99,  45, 'megaminx',  NULL),
+    ('GAN Mirror Blocks Gold',            'Дзеркальний кубик 3×3 — золотий. Збирається за формою, а не за кольором.',                  16.99,  60, 'specialty', NULL)
 ON CONFLICT DO NOTHING;
 
 

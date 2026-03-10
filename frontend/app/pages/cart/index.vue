@@ -95,7 +95,6 @@
 </template>
 
 <script setup lang="ts">
-const config = useRuntimeConfig();
 const session = useSession();
 const { cart, loadCart } = useCart();
 
@@ -116,7 +115,7 @@ async function placeOrder() {
   placing.value = true;
   checkoutError.value = '';
   try {
-    await $fetch(`${config.public.apiBase}/orders/checkout`, {
+    await $fetch(`${useApiBase()}/orders/checkout`, {
       method: 'POST',
       body: {
         sessionId: session.value,

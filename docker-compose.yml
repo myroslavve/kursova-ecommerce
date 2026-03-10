@@ -1,0 +1,94 @@
+# =============================================================================
+# docker-compose.yml — CubeStore full-stack local environment
+#
+# Services:
+#   postgres  — PostgreSQL 16 (primary DB, partitioned orders table)
+#   redis     — Redis 7 (session cache, product catalog cache)
+#   backend   — NestJS API  → http://localhost:3000
+#   frontend  — Nuxt 4 SSR  → http://localhost:3001
+#
+# Usage:
+#   docker compose up --build          # first run or after code changes
+#   docker compose up                  # subsequent runs (cached images)
+#   docker compose down -v             # stop and delete volumes (resets DB)
+# =============================================================================
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       cubestore
+      POSTGRES_USER:     cubestore
+      POSTGRES_PASSWORD: cubestore
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cubestore -d cubestore"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Redis ───────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── NestJS Backend ──────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://cubestore:cubestore@postgres:5432/cubestore
+      DB_HOST:      postgres
+      DB_PORT:      "5432"
+      DB_USER:      cubestore
+      REDIS_HOST:   redis
+      REDIS_PORT:   "6379"
+      PORT:         "3000"
+      # Browser origin for CORS — frontend is exposed on host port 3001
+      CORS_ORIGIN:  http://localhost:3001
+    ports:
+      - "3000:3000"
+
+  # ── Nuxt Frontend ───────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Baked into the client JS bundle — must be reachable from the browser
+        NUXT_PUBLIC_API_BASE: http://localhost:3000/api
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      # Runtime env for SSR — uses Docker-internal network, never the browser
+      API_BASE_INTERNAL: http://backend:3000/api
+      # Fallback public value (already baked in, but kept for clarity)
+      NUXT_PUBLIC_API_BASE: http://localhost:3000/api
+    ports:
+      # Nuxt production server listens on 3000 inside the container;
+      # exposed as 3001 on the host to avoid colliding with the backend.
+      - "3001:3000"
+
+volumes:
+  postgres_data:

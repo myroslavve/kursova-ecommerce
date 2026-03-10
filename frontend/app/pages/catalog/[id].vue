@@ -82,18 +82,17 @@
 import type { Product } from '~/pages/catalog/index.vue';
 
 const route = useRoute();
-const config = useRuntimeConfig();
 const { addItem } = useCart();
 
 const id = route.params.id as string;
 
 const { data: product, status } = await useFetch<Product>(
-  `${config.public.apiBase}/products/${id}`,
+  () => `${useApiBase()}/products/${id}`,
 );
 
 useSeoMeta({
   title: () =>
-    product.value ? `${product.value.name} — LEGOStore` : 'Product',
+    product.value ? `${product.value.name} — CubeStore` : 'Product',
   description: () => product.value?.description ?? '',
   ogImage: () => product.value?.imageUrl ?? undefined,
 });

@@ -12,7 +12,7 @@ export interface CartState {
 }
 
 export const useCart = () => {
-  const config = useRuntimeConfig();
+  const apiBase = useApiBase()
   const session = useSession();
 
   const cart = useState<CartState>('cart', () => ({
@@ -35,7 +35,7 @@ export const useCart = () => {
 
   const addItem = async (item: Omit<CartItem, never>) => {
     const data = await $fetch<CartState>(
-      `${config.public.apiBase}/cart/${session.value}/items`,
+      `${apiBase}/cart/${session.value}/items`,
       { method: 'POST', body: item },
     );
     cart.value = data;

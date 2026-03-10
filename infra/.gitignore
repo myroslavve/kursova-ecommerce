@@ -1,0 +1,19 @@
+# Terraform state files
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+.terraform.lock.hcl
+
+# Sensitive variable overrides
+*.auto.tfvars
+secrets.tfvars
+
+# Credential files
+*.json
+!**/example*.json
+
+# Editor
+.idea/
+.vscode/
+*.swp

@@ -46,18 +46,16 @@ export interface Product {
   imageUrl: string | null;
 }
 
-const config = useRuntimeConfig();
-
 const {
   data: products,
   status,
   refresh,
-} = await useFetch<Product[]>(`${config.public.apiBase}/products`);
+} = await useFetch<Product[]>(() => `${useApiBase()}/products`);
 
 useSeoMeta({
-  title: 'Catalog — LEGOStore',
+  title: 'Catalog — CubeStore',
   description:
-    'Browse our full collection of LEGO sets. Fast delivery, great prices.',
+    "Browse our full collection of Rubik's Cubes and twisty puzzles. Fast delivery, great prices.",
 });
 </script>
 

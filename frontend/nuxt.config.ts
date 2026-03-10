@@ -8,8 +8,14 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // Server-only: used by SSR to reach the backend on the Docker internal network.
+    // Override via API_BASE_INTERNAL env var in docker-compose.
+    apiBaseInternal:
+      process.env.API_BASE_INTERNAL ?? 'http://localhost:3000/api',
+
     public: {
-      // Backend NestJS: http://localhost:3000/api
+      // Browser-side (and dev SSR): reaches backend through the exposed host port.
+      // Override via NUXT_PUBLIC_API_BASE env var.
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? 'http://localhost:3000/api',
     },
   },
